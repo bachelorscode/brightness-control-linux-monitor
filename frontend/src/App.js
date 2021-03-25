@@ -49,6 +49,9 @@ function App() {
         })}
       </select>
 
+      <p>{selectedMonitor}</p>
+
+
       <input
         type="range"
         onChange={control}
