@@ -6,6 +6,7 @@ function App() {
   const [brightness, setBrightness] = useState("");
   const [monitors, setMonitors] = useState([]);
   const [selectedMonitor, setSelectedMonitor] = useState("");
+  const [timeoutId, setTimoutId] = useState(null);
   useEffect(() => {
     (async () => {
       const { data: monitorlist } = await axios.get(
@@ -23,9 +24,17 @@ function App() {
 
   const control = async (e) => {
     let value = e.target.value;
-    await axios.get(`http://localhost:4000/set/${value / 100}`);
-    localStorage.setItem("brightness", value);
-    setBrightness(value);
+    if (timeoutId) {
+      return;
+    }
+    const id = setTimeout(async () => {
+      await axios.get(`http://localhost:4000/set/${value / 100}`);
+      localStorage.setItem("brightness", value);
+      setBrightness(value);
+      setTimoutId(null)
+      console.log(value)
+    }, 1)
+    setTimoutId(id)
   };
 
   return (
@@ -39,10 +48,11 @@ function App() {
           );
         })}
       </select>
-      
+
       <input
         type="range"
         onChange={control}
+        // onChange={control}
         min="10"
         max="100"
         value={brightness || localStorage.getItem("brightness")}
