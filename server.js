@@ -13,12 +13,18 @@ setInterval(async () => {
 }, 3000)
 
 
+
 app.get('/get', async (req, res) => {
   const value = fs.readFileSync(__dirname + '/value.json')
   const { brightness } = JSON.parse(value.toString())
   const monitor = await getMonitors()
   await setBrightness(monitor[0], brightness)
   res.send(brightness)
+})
+
+app.get('/getmonitors', async (req, res) => {
+  const monitors = await getMonitors()
+  res.send(monitors)
 })
 
 app.get('/set/:value', async (req, res) => {
