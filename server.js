@@ -3,6 +3,7 @@ const cors = require('cors')
 const fs = require('fs')
 const { default: axios } = require('axios')
 const { setBrightness, getMonitors } = require('./utils')
+const { monitorEventLoopDelay } = require('perf_hooks')
 
 const app = express()
 app.use(cors())
@@ -19,6 +20,7 @@ app.get('/get', async (req, res) => {
   const { brightness } = JSON.parse(value.toString())
   const monitor = await getMonitors()
   await setBrightness(monitor[0], brightness)
+  console.log(req.query)
   res.send(brightness)
 })
 
@@ -28,8 +30,9 @@ app.get('/getmonitors', async (req, res) => {
 })
 
 app.get('/set/:value', async (req, res) => {
-  const monitor = await getMonitors()
-  await setBrightness(monitor[0], req.params.value)
+  const { monitorName } = req.query
+
+  await setBrightness(monitorName, req.params.value)
   res.send('done')
 })
 

@@ -22,12 +22,10 @@ const setBrightness = async (monitorName, brightness) => {
   const current = await getCurrentBrightness(monitorName)
   return new Promise((resolve, reject) => {
     if (current * 100 === brightness * 100) {
-      console.log('here')
       return resolve('done')
     }
 
     exec(`xrandr --output ${monitorName} --brightness ${brightness}`, (err, stdout) => {
-      console.log('there')
       if (err) return reject(`something went wrong. \n ${err}`)
       fs.writeFileSync(__dirname + '/value.json', JSON.stringify({ brightness }))
       return resolve(stdout.trim())

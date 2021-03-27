@@ -28,7 +28,7 @@ function App() {
       return;
     }
     const id = setTimeout(async () => {
-      await axios.get(`http://localhost:4000/set/${value / 100}`);
+      await axios.get(`http://localhost:4000/set/${value / 100}`, { params: { monitorName: selectedMonitor } });
       localStorage.setItem("brightness", value);
       setBrightness(value);
       setTimoutId(null)
